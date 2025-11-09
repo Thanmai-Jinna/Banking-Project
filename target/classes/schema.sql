@@ -1,0 +1,29 @@
+-- schema for banking_db
+CREATE DATABASE IF NOT EXISTS banking_db;
+USE banking_db;
+
+CREATE TABLE IF NOT EXISTS customers (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100),
+  phone VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS accounts (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  customer_id BIGINT NOT NULL,
+  account_number VARCHAR(50) NOT NULL UNIQUE,
+  balance DECIMAL(15,2) NOT NULL DEFAULT 0,
+  type VARCHAR(30),
+  FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  account_id BIGINT NOT NULL,
+  amount DECIMAL(15,2) NOT NULL,
+  type VARCHAR(20) NOT NULL, -- DEBIT or CREDIT
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  description VARCHAR(255),
+  FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+);
